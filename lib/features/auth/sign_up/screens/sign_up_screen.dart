@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+import 'package:ecommerce_app_huma_volve/features/auth/sign_up/data/models/register_response.dart';
+import 'package:ecommerce_app_huma_volve/features/auth/sign_up/data/repo/signup_repo.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/custom_text_field.dart';
@@ -17,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late final TextEditingController nameController;
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
+   bool isLoading = false;
 
   @override
   void initState() {
@@ -50,19 +54,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 40),
                 Icon(Icons.person_add, size: 80, color: AppTheme.primary),
                 const SizedBox(height: 32),
-                Text(
-                  'Create Account',
-                  style: Theme.of(context).textTheme.displayLarge
-                      ?.copyWith(fontSize: 32),
-                  textAlign: TextAlign.center,
-                ),
+                Text('Create Account', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 32), textAlign: TextAlign.center),
                 const SizedBox(height: 8),
-                Text(
-                  'Sign up to get started',
-                  style: Theme.of(context).textTheme.bodyMedium
-                      ?.copyWith(fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
+                Text('Sign up to get started', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16), textAlign: TextAlign.center),
                 const SizedBox(height: 48),
                 CustomTextField(
                   controller: nameController,
@@ -112,12 +106,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   text: 'Sign Up',
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
+                      setState(() {
+                        isLoading = true;
+                      });
+                      final registerResponse = RegisterResponse(name: nameController.text, email: emailController.text, password: passwordController.text , avatar: "https://kommodo.ai/i/dyhoiwLcCR7o9rF4BLWq");
+                      try {
+                        await SignupRepo.signUp(registerResponse);
+                        setState(() {
+                        isLoading = false;
+                      });
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                      } on DioException catch (e) {
+                        setState(() {
+                        isLoading = false;
+                      });
+                        if(e.type == DioExceptionType.badResponse){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign Up failed: ${e.response?.data['message'] ?? e.message}')));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign Up failed: ${e.message}')));
+                        }
+                      }
+                      
                     }
                   },
                 ),
@@ -131,32 +140,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Navigator.pushReplacement(
                           context,
                           PageRouteBuilder(
-                            pageBuilder: (
-                              context,
-                              animation,
-                              secondaryAnimation,
-                            ) => const LoginScreen(),
-                            transitionsBuilder:
-                                (
-                                  context,
-                                  animation,
-                                  secondaryAnimation,
-                                  child,
-                                ) {
-                                  return FadeTransition(
-                                    opacity: animation,
-                                    child: child,
-                                  );
-                                },
+                            pageBuilder: (context, animation, secondaryAnimation) => const LoginScreen(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return FadeTransition(opacity: animation, child: child);
+                            },
                           ),
                         );
                       },
                       child: Text(
                         'Login',
-                        style: TextStyle(
-                          color: AppTheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

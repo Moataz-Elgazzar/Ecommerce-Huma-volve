@@ -1,9 +1,12 @@
+import 'package:ecommerce_app_huma_volve/core/services/dio_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'core/theme.dart';
 import 'features/splash/screens/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  DioProvider.init();
   runApp(const MyApp());
 }
 
