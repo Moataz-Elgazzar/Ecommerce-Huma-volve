@@ -1,25 +1,21 @@
-import 'package:ecommerce_app_huma_volve/core/dummy_data.dart';
 import 'package:ecommerce_app_huma_volve/features/home/data/models/products/products_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme.dart';
-import '../widgets/color_selector.dart';
-import '../widgets/size_selector.dart';
 import '../../../core/widgets/primary_button.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final ProductsModel product;
-  final Product product1;
+  
 
-  const ProductDetailsScreen({super.key, required this.product , required this.product1});
+  const ProductDetailsScreen({super.key, required this.product ,});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  late Color _selectedColor;
-  late String _selectedSize;
+ 
 
   @override
   void initState() {
@@ -123,15 +119,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    ColorSelector(
-                      colors: widget.product1.colors,
-                      selectedColor: _selectedColor,
-                      onColorSelected: (color) {
-                        setState(() {
-                          _selectedColor = color;
-                        });
-                      },
-                    ),
+                    // ColorSelector(
+                    //   colors: widget.product1.colors,
+                    //   selectedColor: _selectedColor,
+                    //   onColorSelected: (color) {
+                    //     setState(() {
+                    //       _selectedColor = color;
+                    //     });
+                    //   },
+                    // ),
                     const SizedBox(height: 24),
                     Text(
                       'Select Size',
@@ -139,15 +135,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    SizeSelector(
-                      sizes: widget.product1.sizes,
-                      selectedSize: _selectedSize,
-                      onSizeSelected: (size) {
-                        setState(() {
-                          _selectedSize = size;
-                        });
-                      },
-                    ),
+                    // SizeSelector(
+                    //   sizes: widget.product1.sizes,
+                    //   selectedSize: _selectedSize,
+                    //   onSizeSelected: (size) {
+                    //     setState(() {
+                    //       _selectedSize = size;
+                    //     });
+                    //   },
+                    // ),
                     const SizedBox(height: 32),
                     PrimaryButton(
                       text: 'Add to Cart',

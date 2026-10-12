@@ -10,23 +10,54 @@ class HomeCubit extends Cubit<HomeState> {
   final List<CategoriesModel> categories = [];
   final List<ProductsModel> products = [];
 
-  Future<void> getCategorisAndProducts() async {
-    emit(HomeLoadingState());
+ 
+Future<void> getCategories() async {
+  emit(HomeLoadingState());
 
-    try {
-      final result = await Future.wait([HomeRepo.getCategories(), HomeRepo.getProducts(0)]);
+  try {
+    final response = await HomeRepo.getCategories();
 
-      final categoriesResponse = result[0] as List<CategoriesModel>?;
-      final productsResponse = result[1] as List<ProductsModel>?;
-
-      if (categoriesResponse != null || productsResponse != null) {
-        categories.addAll(categoriesResponse ?? []);
-        emit(CategoriesSucessState(categories: categories));
-        products.addAll(productsResponse ?? []);
-        emit(ProductsSucessState(products: products));
-      }
-    } on Exception catch (e) {
-      emit(HomeErrorState(errorMessage: e.toString()));
+    if (response == null || response.isEmpty) {
+      emit(HomeErrorState(
+        errorMessage: 'Failed to load categories',
+      ));
+      return;
     }
+
+    categories
+      ..clear()
+      ..addAll(response);
+
+    await getProductsByCategory(categories.first.id!);
+  } catch (e) {
+    emit(HomeErrorState(errorMessage: e.toString()));
   }
+}
+
+Future<void> getProductsByCategory(int categoryId) async {
+  emit(HomeLoadingState());
+
+  try {
+    final response = await HomeRepo.getProducts(categoryId);
+
+    if (response == null) {
+      emit(HomeErrorState(
+        errorMessage: 'Failed to load products',
+      ));
+      return;
+    }
+
+    products
+      ..clear()
+      ..addAll(response);
+
+    emit(HomeSucessState(
+      categories: categories,
+      products: products,
+    ));
+  } catch (e) {
+    emit(HomeErrorState(errorMessage: e.toString()));
+  }
+}
+
 }

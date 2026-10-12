@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => HomeCubit()..getCategorisAndProducts(),
+      create: (BuildContext context) => HomeCubit()..getCategories(),
       child: Scaffold(
         backgroundColor: AppTheme.background,
         body: SafeArea(
@@ -77,12 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 32),
                       BlocBuilder<HomeCubit, HomeState>(
                         builder: (context, state) {
-                          final categories = context.read<HomeCubit>().categories;
                           if (state is HomeLoadingState) {
-                            return CircularProgressIndicator(color: Colors.blue);
+                            return SizedBox(
+                              height: 44,
+                              child: Center(child: CircularProgressIndicator(color: Colors.blue)),
+                            );
                           } else if (state is HomeErrorState) {
                             return Text(state.errorMessage);
-                          } else if (state is CategoriesSucessState) {
+                          } else if (state is HomeSucessState) {
+                            final categories = state.categories;
                             return SizedBox(
                               height: 44,
                               child: ListView.separated(
@@ -97,6 +100,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       setState(() {
                                         _selectedCategoryIndex = index;
                                       });
+                                      final selectedCategoryId = categories[index].id;  
+                                      if (selectedCategoryId != null) {
+                                        context.read<HomeCubit>().getProductsByCategory(selectedCategoryId);
+                                      }
                                     },
                                   );
                                 },
@@ -113,18 +120,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {
-                  final products = context.read<HomeCubit>().products;
                   if (state is HomeLoadingState) {
-                    return CircularProgressIndicator(color: Colors.blue);
+                    return const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: Center(child: CircularProgressIndicator(color: Colors.blue)),
+                      ),
+                    );
                   } else if (state is HomeErrorState) {
-                    return Text(state.errorMessage);
-                  } else if (state is ProductsSucessState) {
+                    return SliverToBoxAdapter(child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Text(state.errorMessage),
+                    ));
+                  } else if (state is HomeSucessState) {
+                    final products = state.products;
                     return SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       sliver: SliverGrid(
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.7, crossAxisSpacing: 16, mainAxisSpacing: 16),
                         delegate: SliverChildBuilderDelegate((context, index) {
-                          return ProductCard(product: products[index], product1: dummyProducts[index],);
+                          return ProductCard(product: products[index]);
                         }, childCount: products.length),
                       ),
                     );

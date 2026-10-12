@@ -7,14 +7,10 @@ class HomeIntialState extends HomeState {}
 
 class HomeLoadingState extends HomeState {}
 
-class CategoriesSucessState extends HomeState {
+class HomeSucessState extends HomeState {
   final List<CategoriesModel> categories;
-  CategoriesSucessState({required this.categories});
-}
-
-class ProductsSucessState extends HomeState {
   final List<ProductsModel> products;
-  ProductsSucessState({required this.products});
+  HomeSucessState({required this.categories , required this.products});
 }
 
 class HomeErrorState extends HomeState {

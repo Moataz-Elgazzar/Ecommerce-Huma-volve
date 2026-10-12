@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ecommerce_app_huma_volve/features/home/data/models/categories/categories_model.dart';
 
 
@@ -33,7 +35,7 @@ class ProductsModel {
     category: json['category'] == null
         ? null
         : CategoriesModel.fromJson(json['category'] as Map<String, dynamic>),
-    images: json['images'] as List<String>?,
+    images: (json['images'] as List<dynamic>?)?.map((image) => image.toString()).toList(),
     creationAt: json['creationAt'] == null
         ? null
         : DateTime.parse(json['creationAt'] as String),
