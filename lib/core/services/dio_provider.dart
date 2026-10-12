@@ -7,20 +7,37 @@ class DioProvider {
 
   // Initialize Dio instance
   static void init() {
-    dio = Dio(BaseOptions(baseUrl: DioEndpoint.baseUrl, connectTimeout: const Duration(seconds: 3), receiveTimeout: const Duration(seconds: 3), headers: {'ContentType': 'application/json', 'Accept': 'application/json'}));
+    dio = Dio(
+      BaseOptions(
+        baseUrl: DioEndpoint.baseUrl,
+        connectTimeout: const Duration(seconds: 3),
+        receiveTimeout: const Duration(seconds: 3),
+        headers: {
+          'ContentType': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
 
-    dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-      compact: true,
-    ));
+    dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+        compact: true,
+      ),
+    );
   }
 
   // Post request
-  static Future<Response> post({required String path, Object? data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+  static Future<Response> post({
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await dio.post(
       path,
       data: data,
@@ -30,7 +47,12 @@ class DioProvider {
   }
 
   // Get request
-  static Future<Response> get({required String path, Object? data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+  static Future<Response> get({
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await dio.get(
       path,
       data: data,
@@ -40,7 +62,12 @@ class DioProvider {
   }
 
   // Put request
-  static Future<Response> put({required String path, Object? data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+  static Future<Response> put({
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await dio.put(
       path,
       data: data,
@@ -50,7 +77,12 @@ class DioProvider {
   }
 
   // Patch request
-  static Future<Response> patch({required String path, Object? data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+  static Future<Response> patch({
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await dio.patch(
       path,
       data: data,
@@ -60,7 +92,12 @@ class DioProvider {
   }
 
   // Delete request
-  static Future<Response> delete({required String path, Object? data, Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+  static Future<Response> delete({
+    required String path,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await dio.delete(
       path,
       data: data,

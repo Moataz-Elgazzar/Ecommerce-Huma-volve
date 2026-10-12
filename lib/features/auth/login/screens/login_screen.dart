@@ -54,9 +54,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 60),
                 Icon(Icons.shopping_bag, size: 80, color: AppTheme.primary),
                 const SizedBox(height: 32),
-                Text('Welcome Back!', style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 32), textAlign: TextAlign.center),
+                Text(
+                  'Welcome Back!',
+                  style: Theme.of(context).textTheme.displayLarge
+                      ?.copyWith(fontSize: 32),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 8),
-                Text('Login to continue your shopping', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 16), textAlign: TextAlign.center),
+                Text(
+                  'Login to continue your shopping',
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 64),
                 CustomTextField(
                   controller: emailController,
@@ -94,7 +104,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: Text(
                     'Forgot Password?',
-                    style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -106,23 +119,41 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         isLoading = true;
                       });
-                      final loginRequest = LoginRequest(email: emailController.text, password: passwordController.text);
+                      final loginRequest = LoginRequest(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
                       try {
                         await LoginRepo.login(loginRequest);
                         setState(() {
                           isLoading = false;
                         });
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainNavigationScreen()));
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => MainNavigationScreen(),
+                          ),
+                        );
                       } on DioException catch (e) {
                         setState(() {
                           isLoading = false;
                           if (e.type == DioExceptionType.badResponse) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${e.response?.data['message'] ?? 'Login failed. Please try again.'}")));
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("An error occurred. Please try again.")));
-                        }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "${e.response?.data['message'] ?? 'Login failed. Please try again.'}",
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "An error occurred. Please try again.",
+                                ),
+                              ),
+                            );
+                          }
                         });
-                        
                       }
                     }
                   },
@@ -137,16 +168,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacement(
                           context,
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => const SignUpScreen(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              return FadeTransition(opacity: animation, child: child);
-                            },
+                            pageBuilder: (
+                              context,
+                              animation,
+                              secondaryAnimation,
+                            ) => const SignUpScreen(),
+                            transitionsBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
                           ),
                         );
                       },
                       child: Text(
                         'Sign Up',
-                        style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],

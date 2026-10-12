@@ -7,4 +7,10 @@ class DioEndpoint {
 
   // Endpoint for register
   static const String registerEndPoint = "users";
+
+  // Endpoint for categories
+  static const String categories = "categories";
+
+  // Endpoint for products
+  static const String products = "products";
 }
