@@ -17,9 +17,22 @@ class AuthRepositoriesImpl implements AuthRepositories {
   Future<Either<Failure, LoginEntities>> login(LoginRequest loginRequest) async {
     try {
       final login = await authRemoteDataSource.login(loginRequest);
-      SecureStorage.saveAccessToken(login?.accessToken ?? '');
-      SecureStorage.saveRefreshToken(login?.refreshToken ?? '');
-      return right(login!.toEntity());
+      if (login == null) {
+        return const Left(Failure('Login failed. Please try again.'));
+      }
+      final accessToken = login.accessToken;
+      final refreshToken = login.refreshToken;
+
+      if (accessToken == null || accessToken.isEmpty) {
+        return const Left(Failure('The server did not return a valid access token.'));
+      }
+      await SecureStorage.saveAccessToken(login.accessToken ?? '');
+
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        await SecureStorage.saveRefreshToken(refreshToken);
+      }
+
+      return right(login.toEntity());
     } on Exception catch (e) {
       return Left(ErrorHandler.handle(e));
     }
@@ -29,7 +42,10 @@ class AuthRepositoriesImpl implements AuthRepositories {
   Future<Either<Failure, SignupEntities>> signUp(SignupResponse signupResponse) async {
     try {
       final signup = await authRemoteDataSource.signUp(signupResponse);
-      return Right(signup!.toEntity());
+      if (signup == null) {
+        return const Left(Failure('Registration failed. Please try again.'));
+      }
+      return Right(signup.toEntity());
     } on Exception catch (e) {
       return Left(ErrorHandler.handle(e));
     }

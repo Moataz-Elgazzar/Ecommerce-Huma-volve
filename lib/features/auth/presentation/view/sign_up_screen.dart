@@ -64,8 +64,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (state is SignupLoadingState) {
                     CircularProgressIndicator(color: Colors.blue);
                   } else if (state is SignupErrorState) {
-                    Navigator.of(context).pop();
-                    Text("${state.error}");
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(state.error ?? 'Registration failed. Please try again.'), backgroundColor: Colors.red));
                   } else if (state is SignupSuccesState) {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                   }
@@ -132,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: 'Sign Up',
                           onPressed: () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              final signupResponse = SignupResponse(name: nameController.text, email: emailController.text, password: passwordController.text, avatar: "https://kommodo.ai/i/882phr5H23Az9KAhleTY" , role: "customer");
+                              final signupResponse = SignupResponse(name: nameController.text, email: emailController.text, password: passwordController.text, avatar: "https://kommodo.ai/i/882phr5H23Az9KAhleTY", role: "customer");
                               context.read<SignupCubit>().signup(signupResponse);
                             }
                           },

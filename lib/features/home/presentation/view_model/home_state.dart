@@ -17,7 +17,6 @@ class CategoryErrorState extends HomeState {
   CategoryErrorState(this.errorMessage);
 }
 
-
 class ProductLoadingState extends HomeState {}
 
 class ProductSucessState extends HomeState {
@@ -27,5 +26,16 @@ class ProductSucessState extends HomeState {
 
 class ProductErrorState extends HomeState {
   final String errorMessage;
-  ProductErrorState( this.errorMessage);
+  ProductErrorState(this.errorMessage);
+}
+
+class ProductpaginationLoadingState extends HomeState {
+  final List<HomeProductsEntities> products;
+
+  ProductpaginationLoadingState({required this.products});
+}
+
+class ProductPaginationErrorState extends HomeState {
+  final String errorMessage;
+  ProductPaginationErrorState(this.errorMessage);
 }

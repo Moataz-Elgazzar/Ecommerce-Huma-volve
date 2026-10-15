@@ -64,8 +64,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state is LoginLoadingState) {
                     CircularProgressIndicator(color: Colors.blue);
                   } else if (state is LoginErrorState) {
-                    Navigator.of(context).pop();
-                    Text("${state.error}");
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(SnackBar(content: Text(state.error ?? 'Login failed. Please try again.'), backgroundColor: Colors.red));
                   } else if (state is LoginSuccesState) {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainNavigationScreen()));
                   }

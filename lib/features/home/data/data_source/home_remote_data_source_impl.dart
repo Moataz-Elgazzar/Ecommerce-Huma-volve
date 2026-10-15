@@ -16,8 +16,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<List<ProductsModel>?> getProducts(int? id) async {
-    final productsResponse = await DioProvider.get(path: "${DioEndpoint.categories}/$id/${DioEndpoint.products}");
+  Future<List<ProductsModel>?> getProducts(int? id , {required int limit  ,required int offset}) async {
+    final productsResponse = await DioProvider.get(path: "${DioEndpoint.categories}/$id/${DioEndpoint.products}" , queryParameters: 
+    {
+      "limit" : limit,
+      "offset" : offset,
+    }
+    );
     if (productsResponse.statusCode == 200) {
       return (productsResponse.data as List).map((product) => ProductsModel.fromJson(product)).toList();
     } else {
