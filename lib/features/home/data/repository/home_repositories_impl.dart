@@ -21,10 +21,25 @@ class HomeRepositoriesImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, List<HomeProductsEntities>>> getProducts(int? id , {required int limit  ,required int offset}) async {
+  Future<Either<Failure, List<HomeProductsEntities>>> getProducts(int? id, {required int limit, required int offset}) async {
     try {
       final products = await homeRemoteDataSource.getProducts(id, limit: limit, offset: offset);
       return Right(products!.map((product) => product.toEntity()).toList());
+    } on Exception catch (e) {
+      return Left(ErrorHandler.handle(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, HomeProductsEntities>> getProductById(int id) async {
+    try {
+      final product = await homeRemoteDataSource.getProductById(id);
+
+      if (product == null) {
+        throw Exception('Product not found');
+      }
+
+      return Right(product.toEntity());
     } on Exception catch (e) {
       return Left(ErrorHandler.handle(e));
     }

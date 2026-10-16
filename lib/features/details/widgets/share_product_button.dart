@@ -9,7 +9,7 @@ class ShareProductButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () async {
-        final String productLink = "";
+        final String productLink = 'https://product-links.moataz-mahmoad.workers.dev/products/$productId';
         final String shareMessage = "Look at this product: $productLink";
         await SharePlus.instance.share(ShareParams(text: shareMessage , subject: "check out this product on Huma Volve"));
       },

@@ -1,6 +1,8 @@
+import 'package:ecommerce_app_huma_volve/core/routes/routes.dart';
 import 'package:ecommerce_app_huma_volve/features/details/widgets/share_product_button.dart';
 import 'package:ecommerce_app_huma_volve/features/home/domain/entity/home_products_entities.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme.dart';
 import '../../../core/widgets/primary_button.dart';
@@ -38,10 +40,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
                 child: const Icon(Icons.arrow_back_ios_new, size: 16),
               ),
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!context.mounted) return;
+                  context.go(Routes.home);
+                });
+              },
             ),
             actions: [
-              ShareProductButton(productId: widget.product.id ?? 0,),
+              ShareProductButton(productId: widget.product.id ?? 0),
               IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(8),
@@ -56,7 +63,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               background: Hero(
                 tag: 'product-${widget.product.id}',
                 child: Image.network(
-                  widget.product.images?.isNotEmpty == true ? widget.product.images!.first : '', 
+                  widget.product.images?.isNotEmpty == true ? widget.product.images!.first : '',
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset("assets/images/place_holder.png");
